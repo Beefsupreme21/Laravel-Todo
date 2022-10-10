@@ -7,43 +7,46 @@
     <title>Laravel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
+
 </head>
 <body class="bg-gray-800">
-    <div class="w-2/3 m-auto mt-16">
-        <div class="p-6 border border-black">
+    <div class="w-2/3 m-auto mt-16 bg-gray-500 border border-black text-center rounded-xl p-6">
+        <div class="text-2xl">Todo List</div>
+        <div class="p-6">
             <form action="/store" method="POST">
                 @csrf
-                <input class="bg-gray-800 border border-white" type="text" name="title">
-                <input type="submit" value="Create"> 
+                <button class="bg-green-800 border border-black p-3 rounded-xl" type="submit" value="Submit" >Submit</button>
+                <input class="border border-white w-2/3 p-3 rounded-xl" type="text" name="title">
             </form>
         </div>
-        <h1>All your todos</h1>
-        <div>
-            @foreach ($todos as $todo)
-                <div class="flex">
-                    <div>
-                        {{ $todo->title }}
+        <div class="border-black border-t-4 text-2xl">
+            <div class="text-2xl">All your todos</div>
+            <div class="w-2/3 m-auto">
+                @foreach ($todos as $todo)
+                    <div class="flex justify-between">
+                        <div>
+                            {{ $todo->title }}
+                        </div>
+                        <div class="flex">
+                            <a href="/edit">
+                                <button class="text-red-500 hover:underline pr-3">
+                                    <i class="fa-solid fa-trash"></i> Edit
+                                </button>
+                            </a>
+                            <form method="POST" action="/{{$todo->id}}/delete">
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-red-500 hover:underline">
+                                    <i class="fa-solid fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                    {{-- <form method="POST" action="/{{$todo->id}}/edit">
-                        @csrf
-                        @method('DELETE')
-                        <button class="text-red-500">
-                            <i class="fa-solid fa-trash"></i> Delete{{ $todo->id }}
-                        </button>
-                    </form> --}}
-                    <form method="POST" action="/{{$todo->id}}/delete">
-                        @csrf
-                        @method('DELETE')
-                        <button class="text-red-500">
-                            <i class="fa-solid fa-trash"></i> Delete{{ $todo->id }}
-                        </button>
-                    </form>
+                @endforeach
+            </div>
 
-                </div>
-
-
-            @endforeach
         </div>
+
     </div>
 
 

@@ -7,14 +7,14 @@
     <title>Laravel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-
 </head>
+
 <body class="bg-gray-800">
     <div class="w-2/3 m-auto mt-16 bg-gray-500 border border-black text-center rounded-xl p-6">
         <div class="text-2xl">Todo List</div>
         <div class="p-6">
             <form action="/store" method="POST">
-                <?php echo csrf_field(); ?>
+                @csrf
                 <button class="bg-green-800 border border-black p-3 rounded-xl" type="submit" value="Submit" >Submit</button>
                 <input class="border border-white w-2/3 p-3 rounded-xl" type="text" name="title">
             </form>
@@ -22,28 +22,30 @@
         <div class="border-black border-t-4 text-2xl">
             <div class="text-2xl">All your todos</div>
             <div class="w-2/3 m-auto">
-                <?php $__currentLoopData = $todos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $todo): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                @foreach ($todos as $todo)
                     <div class="flex justify-between">
-                        <div>
-                            <?php echo e($todo->title); ?>
-
-                        </div>
-                        <div class="flex">
-                            <a href="/edit">
-                                <button class="text-red-500 hover:underline pr-3">
-                                    <i class="fa-solid fa-trash"></i> Edit
+                        <form action="/update/{{$todo->id}}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <input class="bg-gray-800 border border-white mb-4" type="text" name="title" value="{{ $todo->title }}">
+                            <div>
+                                <button class="text-red-500 hover:underline pr-3" type="submit">
+                                    <i class="fa-solid fa-trash"></i> Update
                                 </button>
-                            </a>
-                            <form method="POST" action="/<?php echo e($todo->id); ?>/delete">
-                                <?php echo csrf_field(); ?>
-                                <?php echo method_field('DELETE'); ?>
+                            </div>
+                        </form>
+                        <div class="flex">
+
+                            <form method="POST" action="/{{$todo->id}}/delete">
+                                @csrf
+                                @method('DELETE')
                                 <button class="text-red-500 hover:underline">
                                     <i class="fa-solid fa-trash"></i> Delete
                                 </button>
                             </form>
                         </div>
                     </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                @endforeach
             </div>
 
         </div>
@@ -51,10 +53,6 @@
     </div>
 
 
-
     
 </body>
 </html>
-
-
-<?php /**PATH C:\xampp\Projects\Todo-List\resources\views/todo/index.blade.php ENDPATH**/ ?>
