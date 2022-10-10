@@ -23,16 +23,31 @@ class TodoController extends Controller
 
     public function edit() 
     {
-        return view('index');
+        $todos =  Todo::all();
+
+        return view('todo.edit', [
+            'todos' => $todos, 
+        ]);
     }
 
     public function store(Request $request) 
     {   
-        $request->validate([
+        $todo = $request->validate([
             'title' => 'required|max:255'
         ]);
-        $todo = $request->title;
-        Todo::create(['title' => $todo]);
+
+        Todo::create($todo);
+        return back()->with('success', "Todo created successfully");
+    }
+
+    public function update(Request $request, Todo $todo) 
+    {   
+        $todoUpdated = $request->validate([
+            'title' => 'required|max:255'
+        ]);
+
+        $todo->update($todoUpdated);
+
         return back()->with('success', "Todo created successfully");
     }
 
